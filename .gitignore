@@ -3,3 +3,4 @@ mlops_course/data/
 mlops_course/model_base.ckpt
 week10_CNN_seminar.ipynb
 scores.txt
+.DS_Store
