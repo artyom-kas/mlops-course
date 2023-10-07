@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "mlops-course"
+version = "0.1.0"
+description = "Пример проекта для курса MLOps на ФПМИ"
+authors = ["Соснин Артём Дмитриевич <a.d.sosnin@tinkoff.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+torch = "^2.1.0"
+torchvision = "^0.16.0"
+matplotlib = "^3.8.0"
+tqdm = "^4.66.1"
+notebook = "^7.0.4"
+torchsummary = "^1.5.1"
+scikit-learn = "^1.3.1"
+pre-commit = "^3.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
