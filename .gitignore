@@ -4,3 +4,11 @@ mlops_course/model_base.ckpt
 week10_CNN_seminar.ipynb
 scores.txt
 .DS_Store
+id_rsa
+id_rsa.pub
+/data
+outputs
+mlops_course
+.hydra
+.DS_Store
+model_base.ckpt

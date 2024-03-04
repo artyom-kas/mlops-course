@@ -1,0 +1,15 @@
+defaults:
+  - preprocessing
+  - model
+  - mlflow
+  - _self_
+
+epochs: 5
+batch_size: 256
+data_path: data"
+learning_rate: 1e-3
+num_workers: 4
+
+hydra:
+  run:
+    dir: .

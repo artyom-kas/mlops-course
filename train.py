@@ -2,6 +2,7 @@ import os
 import time
 from collections import defaultdict
 
+import hydra
 import numpy as np
 import torch
 import torch.nn as nn
@@ -9,6 +10,7 @@ import torch.nn.functional as F
 import torchvision
 from IPython.display import clear_output
 from matplotlib import pyplot as plt
+from omegaconf import DictConfig
 from sklearn.metrics import accuracy_score, f1_score
 from torchsummary import summary
 from torchvision import transforms
@@ -130,7 +132,6 @@ class Runner:
             # compute backward pass if training phase
             # reminder: don't forget the optimizer step and zeroing the grads
             if train_phase:
-                # <YOUR CODE HERE>
                 self.opt.zero_grad()  # Zeroing the gradients
                 loss.backward()  # Backpropagation step
                 self.opt.step()  # Optimizer step
@@ -270,33 +271,38 @@ class CNNRunner(Runner):
             plt.show()
 
 
-def main():
+@hydra.main(config_path="configs", config_name="train", version_base="1.2")
+def main(cfg: DictConfig):
+    os.environ["HYDRA_FULL_ERROR"] = "1"
     # Path to a directory with image dataset and subfolders
     # for training, validation and final testing
     DATA_PATH = r"data"
 
     # Number of threads for data loader
-    NUM_WORKERS = 4
+    NUM_WORKERS = cfg.num_workers
 
     # Image size: even though image sizes are bigger than 64, we use this to speed up training
-    SIZE_H = SIZE_W = 96
+    SIZE_H = cfg.preprocessing.size_h
+    SIZE_W = cfg.preprocessing.size_w
 
     # Number of classes in the dataset
-    NUM_CLASSES = 2
+    NUM_CLASSES = cfg.model.num_classes
 
     # Epochs: number of passes over the training data, we use it this small
     # to reduce training babysitting time
-    EPOCH_NUM = 5
+    EPOCH_NUM = cfg.epochs
 
     # Batch size: for batch gradient descent optimization, usually selected as 2**K elements
-    BATCH_SIZE = 256
+    BATCH_SIZE = cfg.batch_size
 
     # Images mean and std channelwise
-    image_mean = [0.485, 0.456, 0.406]
-    image_std = [0.229, 0.224, 0.225]
+    image_mean = cfg.preprocessing.image_mean
+    image_std = cfg.preprocessing.image_std
 
     # Last layer (embeddings) size for CNN models
-    EMBEDDING_SIZE = 128
+    EMBEDDING_SIZE = cfg.model.embedding_size
+
+    LEARNING_RATE = cfg.learning_rate
 
     transformer = transforms.Compose(
         [
@@ -366,7 +372,7 @@ def main():
 
     print(f"Loss value: {loss.detach().cpu().numpy()}")
 
-    opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+    opt = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
     opt.zero_grad()
     ckpt_name = "model_base.ckpt"
     model = model.to(device)

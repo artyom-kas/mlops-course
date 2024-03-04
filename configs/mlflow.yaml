@@ -1,0 +1,4 @@
+mlflow_uri: http://127.0.0.1:8080
+
+registered_model_name: pet_classification_model
+model_uri: models:/${registered_model_name}/latest
